@@ -1,10 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
+
+const baseURL = "http://127.0.0.1:5002";
 
 function App() {
+  const [banks, setBanks] = useState(null);
+
+  console.log("banks", banks);
+
+  useEffect(() => {
+    axios.get(`${baseURL}/institutions`).then((response) => {
+      console.log("response", response);
+      setBanks(response.data.banks);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (banks) {
+      axios.post(`${baseURL}/authorize`, {}).then((response) => {
+        console.log("authorize response", response.data);
+      });
+    }
+  }, [banks]);
+
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -17,7 +41,7 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
     </div>
   );
 }
